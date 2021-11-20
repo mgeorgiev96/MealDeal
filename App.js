@@ -1,21 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
+
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import Navigator from './drawer/drawer'
+import {Provider} from 'react-redux'
+import store from './global/store/store'
+import Parse from "parse/react-native.js";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {APP_ID,JS_KEY} from '@env'
+import {
+  useFonts,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Montserrat_700Bold
+} from '@expo-google-fonts/montserrat';
+import AppLoading from 'expo-app-loading';
+
+
+
+Parse.setAsyncStorage(AsyncStorage);
+Parse.initialize(APP_ID,JS_KEY);
+Parse.serverURL = 'https://parseapi.back4app.com/';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+  let [fontsLoaded] = useFonts({
+    Montserrat_500Medium,
+    Montserrat_600SemiBold,
+    Montserrat_700Bold
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <Provider store={store}>
+      <Navigator/>
+    </Provider>
+    );
+  }
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
